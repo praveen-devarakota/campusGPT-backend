@@ -1,3 +1,4 @@
+import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from flask import send_from_directory
@@ -5,7 +6,11 @@ from flask import send_from_directory
 from rag.retriever import retrieve_documents
 from rag.llm import generate_response
 
-from utils.attendance_parser import load_attendance
+from utils.attendance_parser import (
+    load_attendance,
+    attendance_data
+)
+
 from utils.attendance_query import (
     extract_roll_number,
     get_attendance
@@ -18,6 +23,7 @@ CORS(app)
 
 @app.route("/")
 def home():
+
     return "CampusGPT Backend Running"
 
 
@@ -48,6 +54,16 @@ def chat():
         roll_no = extract_roll_number(query)
 
         if roll_no:
+
+            # =========================================
+            # LOAD ATTENDANCE ONLY WHEN NEEDED
+            # =========================================
+
+            if not attendance_data:
+
+                print("\nLoading attendance data...\n")
+
+                load_attendance()
 
             student = get_attendance(roll_no)
 
@@ -169,12 +185,11 @@ def get_file(filename):
     )
 
 
-# =========================================
-# LOAD ATTENDANCE DATA AT STARTUP
-# =========================================
-
-load_attendance()
-
-
 if __name__ == "__main__":
-    app.run(debug=True)
+
+    port = int(os.environ.get("PORT", 5000))
+
+    app.run(
+        host="0.0.0.0",
+        port=port
+    )

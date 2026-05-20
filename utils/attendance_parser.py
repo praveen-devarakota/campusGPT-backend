@@ -1,14 +1,18 @@
 import fitz
-import pytesseract
 from PIL import Image
 import io
 import re
 import os
 
 # Tesseract path
-pytesseract.pytesseract.tesseract_cmd = (
-    r"C:\Program Files\Tesseract-OCR\tesseract.exe"
-)
+import platform
+import pytesseract
+
+if platform.system() == "Windows":
+
+    pytesseract.pytesseract.tesseract_cmd = (
+        r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+    )
 
 BASE_DIR = os.path.dirname(
     os.path.dirname(os.path.abspath(__file__))
@@ -53,11 +57,6 @@ def load_attendance():
 
         full_text += text + "\n"
 
-    print("\n=========== OCR TEXT ===========\n")
-
-    print(full_text)
-
-    print("\n================================\n")
 
     # Extract roll numbers
     roll_numbers = re.findall(
@@ -65,8 +64,6 @@ def load_attendance():
         full_text
     )
 
-    print("\nROLL NUMBERS:\n")
-    print(roll_numbers)
 
     # Extract percentages
     percentage_matches = re.findall(
@@ -74,14 +71,11 @@ def load_attendance():
         full_text
     )
 
-    print("\nALL NUMBERS:\n")
-    print(percentage_matches)
 
     # Last percentages in PDF
     final_percentages = percentage_matches[-4:]
 
-    print("\nFINAL PERCENTAGES:\n")
-    print(final_percentages)
+
 
     # Map correctly
     for i in range(
@@ -94,5 +88,3 @@ def load_attendance():
         }
 
     print("\nAttendance Loaded Successfully\n")
-
-    print(attendance_data)
