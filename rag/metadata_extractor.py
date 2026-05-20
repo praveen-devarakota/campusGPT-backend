@@ -21,7 +21,7 @@ def extract_metadata(source):
         "college": "VRSEC",
 
         "source_link":
-        f"https://vrsec.edu.in/questionpapers/{filename}"
+        f"https://drive.google.com/drive/folders/1GYVy2zbBjdFR97RbPwSEXpD8ByucZQxi"
     }
 
     # =========================================
