@@ -1,4 +1,5 @@
 from chromadb import PersistentClient
+from rag.embeddings import get_embedding_model
 
 CHROMA_PATH = "chroma_db"
 
@@ -13,18 +14,16 @@ def retrieve_documents(query):
         name="campusgpt"
     )
 
-    # =========================================
-    # DIRECT TEXT QUERY
-    # =========================================
+    embedding_model = get_embedding_model()
 
-    results = collection.query(
-        query_texts=[query],
-        n_results=10
+    query_embedding = embedding_model.embed_query(
+        query
     )
 
-    # =========================================
-    # FILTER LOW QUALITY RESULTS
-    # =========================================
+    results = collection.query(
+        query_embeddings=[query_embedding],
+        n_results=5
+    )
 
     filtered_documents = []
     filtered_metadatas = []
@@ -42,9 +41,7 @@ def retrieve_documents(query):
             distances
         ):
 
-            # Smaller distance = better match
-
-            if distance < 1.2:
+            if distance < 1.5:
 
                 filtered_documents.append(doc)
 
