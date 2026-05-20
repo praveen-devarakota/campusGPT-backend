@@ -50,10 +50,6 @@ def retrieve_documents(query):
                 ""
             ).lower()
 
-            # =========================================
-            # STRICT FILTERING
-            # =========================================
-
             keyword_match = any(
                 word in doc_lower
                 or word in subject_name
@@ -70,23 +66,6 @@ def retrieve_documents(query):
                 filtered_metadatas.append(meta)
 
                 filtered_distances.append(distance)
-
-        # =========================================
-        # DEBUG RESULTS
-        # =========================================
-
-        print("\n========== RETRIEVAL RESULTS ==========\n")
-
-        for meta, distance in zip(
-            filtered_metadatas,
-            filtered_distances
-        ):
-
-            print(meta)
-
-            print("Distance:", distance)
-
-            print("--------------------------------")
 
     return {
         "documents": [filtered_documents],
