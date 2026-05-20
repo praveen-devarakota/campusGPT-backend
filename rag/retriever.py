@@ -1,5 +1,4 @@
 from chromadb import PersistentClient
-from rag.embeddings import get_embedding_model
 
 CHROMA_PATH = "chroma_db"
 
@@ -14,14 +13,12 @@ def retrieve_documents(query):
         name="campusgpt"
     )
 
-    embedding_model = get_embedding_model()
-
-    query_embedding = embedding_model.embed_query(
-        query
-    )
+    # =========================================
+    # DIRECT TEXT QUERY
+    # =========================================
 
     results = collection.query(
-        query_embeddings=[query_embedding],
+        query_texts=[query],
         n_results=10
     )
 
